@@ -10,16 +10,18 @@ Implementation of Tapo API using a
 
 ```go
     import (
-		"github.com/richardjennings/tapo/pkg/tapo"
+        "github.com/richardjennings/tapo/pkg/tapo"
     )
+
     var t *tapo.Tapo
     var r map[string]interface{}
     var err error
-    t, err = tapo.NewTapo(ip, username, password)
-	r, err = t.TurnOn()
-	r, err = t.TurnOff()
-	r, err = t.GetEnergyUsgae()
-	r, err = t.DeviceInfo()
+
+    t, err = tapo.NewTapo("192.168.0.200", "username", "password")
+    r, err = t.TurnOn()
+    r, err = t.TurnOff()
+    r, err = t.GetEnergyUsage()
+    r, err = t.DeviceInfo()
 ```
 
 ## CLI
