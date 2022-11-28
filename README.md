@@ -1,20 +1,51 @@
 # Tapo SmartPlug API Client
 
+
 ## About
 
-Implementation of Tapo API using a 
+Implementation of Tapo API using a
 [reverse engineering blog post](https://k4czp3r.xyz/reverse-engineering/tp-link/tapo/2020/10/15/reverse-engineering-tp-link-tapo.html).
 
-Running `cmd/main.go <ip-address> <username> <password>` might print out something like:
+## Library
+
+```go
+    import (
+		"github.com/richardjennings/tapo/pkg/tapo"
+    )
+    var t *tapo.Tapo
+    var r map[string]interface{}
+    var err error
+    t, err = tapo.NewTapo(ip, username, password)
+	r, err = t.TurnOn()
+	r, err = t.TurnOff()
+	r, err = t.GetEnergyUsgae()
+	r, err = t.DeviceInfo()
+```
+
+## CLI
+
+`go install github.com/richardjennings/tapo`
+
+### Usage
+```
+tapo <ip-address> <username> <password> [on, off, energy-usage, device-info]
+```
+
+For example:
 
 ```
-today_energy 12
-month_energy 16128
-local_time 2022-11-28 15:38:04
-electricity_charge [0 0 0]
-current_power 5196
-today_runtime 146
-month_runtime 22967
+tapo 192.168.0.101 email@address thepassword energy-usage
+{
+  "error_code": 0,
+  "result": {
+    "current_power": 0,
+    ...
+    "month_energy": 10000,
+    "month_runtime": 10000,
+    "today_energy": 400,
+    "today_runtime": 300
+  }
+}
 ```
 
 

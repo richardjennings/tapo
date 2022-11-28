@@ -165,6 +165,7 @@ func (d *Tapo) Request(url string, method string, body map[string]interface{}) (
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("response status code %d", res.StatusCode)
@@ -220,5 +221,64 @@ func (d *Tapo) GetEnergyUsage() (map[string]interface{}, error) {
 			},
 		},
 	)
+}
 
+func (d *Tapo) DeviceInfo() (map[string]interface{}, error) {
+	return d.Request(
+		fmt.Sprintf("http://%s/app?token=%s", d.ip, d.token),
+		"POST",
+		map[string]interface{}{
+			"method": "securePassthrough",
+			"params": map[string]interface{}{
+				"request": d.encrypt(
+					map[string]interface{}{
+						"method":          "get_device_info",
+						"requestTimeMils": 0,
+					},
+				),
+			},
+		},
+	)
+}
+
+func (d *Tapo) TurnOn() (map[string]interface{}, error) {
+	return d.Request(
+		fmt.Sprintf("http://%s/app?token=%s", d.ip, d.token),
+		"POST",
+		map[string]interface{}{
+			"method": "securePassthrough",
+			"params": map[string]interface{}{
+				"request": d.encrypt(
+					map[string]interface{}{
+						"method": "set_device_info",
+						"params": map[string]interface{}{
+							"device_on": true,
+						},
+						"requestTimeMils": 0,
+					},
+				),
+			},
+		},
+	)
+}
+
+func (d *Tapo) TurnOff() (map[string]interface{}, error) {
+	return d.Request(
+		fmt.Sprintf("http://%s/app?token=%s", d.ip, d.token),
+		"POST",
+		map[string]interface{}{
+			"method": "securePassthrough",
+			"params": map[string]interface{}{
+				"request": d.encrypt(
+					map[string]interface{}{
+						"method": "set_device_info",
+						"params": map[string]interface{}{
+							"device_on": false,
+						},
+						"requestTimeMils": 0,
+					},
+				),
+			},
+		},
+	)
 }
