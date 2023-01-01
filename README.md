@@ -50,4 +50,6 @@ tapo 192.168.0.101 email@address thepassword energy-usage
 }
 ```
 
+## Used By
+* [https://github.com/richardjennings/tapmon](https://github.com/richardjennings/tapmon)
 
