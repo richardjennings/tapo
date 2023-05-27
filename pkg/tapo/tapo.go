@@ -63,7 +63,7 @@ func NewTapo(ip string, email string, password string) (*Tapo, error) {
 }
 
 func (d *Tapo) encrypt(p map[string]interface{}) string {
-	in, err := json.Marshal(p)
+	in, _ := json.Marshal(p)
 
 	block, err := aes.NewCipher(d.key)
 	if err != nil {
@@ -129,6 +129,9 @@ func (d *Tapo) Handshake() error {
 	req.Header = map[string][]string{"Content-Type": {"application/json"}}
 	req.Close = true
 	res, err := d.client.Do(req)
+	if err != nil {
+		return err
+	}
 	defer res.Body.Close()
 
 	var v map[string]interface{}
@@ -157,7 +160,7 @@ func (d *Tapo) Request(url string, method string, body map[string]interface{}) (
 	if err := enc.Encode(body); err != nil {
 		return nil, err
 	}
-	req, err := http.NewRequest(method, url, buf)
+	req, _ := http.NewRequest(method, url, buf)
 	req.Header.Set("Cookie", d.sessionId)
 	req.Close = true
 
